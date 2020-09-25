@@ -15,8 +15,8 @@ const invokeWorker = (task) => {
 		} else if (result) {
 			//TODO: mark the task success in database
 		}
-		const task = taskQueue.dequeue();
-		ExecuteTask(task);
+		const newTask = taskQueue.dequeue();
+		ExecuteTask(newTask);
 	});
 	return ok;
 };

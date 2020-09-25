@@ -82,7 +82,6 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 			if (task) {
 				this.setWorkerBusy(worker);
 				const { port1, port2 } = new MessageChannel();
-
 				worker.postMessage({ task, port: port1 }, [port1]);
 				port2.once("message", (result) => {
 					this.setWorkerIdle(worker);
@@ -92,8 +91,8 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 					this.setWorkerIdle(worker);
 					cb(err, null, task);
 				});
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}
