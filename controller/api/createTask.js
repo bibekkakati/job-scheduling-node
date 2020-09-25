@@ -1,5 +1,5 @@
 const CreateTask = require("../../helper/task_helpers/CreateTask");
-const ExecuteTask = require("../../helper/task_helpers/ExecuteTask");
+const EnqueueTask = require("../../helper/task_helpers/EnqueueTask");
 const router = require("express").Router();
 
 router.post("/", (req, res) => {
@@ -13,7 +13,7 @@ router.post("/", (req, res) => {
 
 	const task = CreateTask(priorityLevel);
 
-	const done = ExecuteTask(task);
+	const done = EnqueueTask(task);
 
 	if (done) {
 		return res.status(200).send({

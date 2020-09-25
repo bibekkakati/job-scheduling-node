@@ -75,25 +75,25 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 	 * @param {*} data
 	 * @param {Function} cb
 	 */
-	executeTask(task, cb) {
+	executeTask(getTask, cb) {
 		const worker = this.getIdleWorker();
 
 		if (worker !== null) {
-			if (task) {
+			const data = getTask();
+			if (data) {
 				this.setWorkerBusy(worker);
 				const { port1, port2 } = new MessageChannel();
 				worker.postMessage({ task, port: port1 }, [port1]);
 				port2.once("message", (result) => {
 					this.setWorkerIdle(worker);
-					cb(null, result, task);
+					cb(null, result, data);
 				});
 				port2.once("error", (err) => {
 					this.setWorkerIdle(worker);
-					cb(err, null, task);
+					cb(err, null, data);
 				});
 			}
 			return true;
 		}
-		return false;
 	}
 };
