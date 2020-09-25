@@ -86,11 +86,11 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 				worker.postMessage({ task, port: port1 }, [port1]);
 				port2.once("message", (result) => {
 					this.setWorkerIdle(worker);
-					cb(null, result, data);
+					cb(null, result, task);
 				});
 				port2.once("error", (err) => {
 					this.setWorkerIdle(worker);
-					cb(err, null, data);
+					cb(err, null, task);
 				});
 			}
 			return true;
