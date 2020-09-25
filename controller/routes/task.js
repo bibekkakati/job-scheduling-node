@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// ALL AUTH SERVICE API'S
 const createTask = require("../api/createTask");
 const abortTask = require("../api/abortTask");
 const deleteTask = require("../api/deleteTask");
