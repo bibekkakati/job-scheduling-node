@@ -1,4 +1,4 @@
-const EmitEvent = require("../event_helpers/Emitters");
+const { invokeWorker } = require("../worker_helpers/Handlers");
 const Singleton = require("../queue_helpers/Singleton");
 
 const EnqueueTask = (task) => {
@@ -8,7 +8,7 @@ const EnqueueTask = (task) => {
 	if (res === null) {
 		return false;
 	}
-	EmitEvent("invoke_worker");
+	invokeWorker();
 	return true;
 };
 

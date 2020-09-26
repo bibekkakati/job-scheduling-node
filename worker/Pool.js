@@ -93,7 +93,6 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 					cb(err, null, task);
 				});
 			}
-			return true;
 		}
 	}
 };
