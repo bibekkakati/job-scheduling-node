@@ -1,6 +1,6 @@
 const { EventEmitter } = require("events");
 const { Worker, MessageChannel } = require("worker_threads");
-const Singleton = require("../../helper/db_helpers/Singleton");
+const Singleton = require("../helper/db_helpers/Singleton");
 const redis = Singleton.getRedis();
 
 const WORKER_STATUS = {
