@@ -59,7 +59,8 @@ class Redis {
 
 	addTask = (task) => {
 		let { taskId, createdAt } = task;
-		this.redis.hmset(taskId, task, (err, res) => {
+		task = JSON.stringify(task);
+		this.redis.set(taskId, task, (err, res) => {
 			if (res) {
 				this.updateTaskList(taskId, createdAt);
 			}
@@ -81,16 +82,15 @@ class Redis {
 	updateTask = (task) => {
 		let { taskId } = task;
 		console.log(task);
-		this.redis.del(taskId, (err, res) => {
-			this.redis.hmset(taskId, task, async (err, res) => {});
-		});
+		task = JSON.stringify(task);
+		this.redis.set(taskId, task, (err, res) => {});
 	};
 
 	getTask = (taskId) =>
 		new Promise((resolve, reject) => {
-			this.redis.hgetall(taskId, (err, hash) => {
+			this.redis.get(taskId, (err, hash) => {
 				if (hash) {
-					resolve(hash);
+					resolve(JSON.parse(hash));
 				} else {
 					resolve(false);
 				}
