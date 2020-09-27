@@ -8,7 +8,7 @@ const CreateTask = (priorityLevel) => {
 		halt: 0,
 		status: "Create",
 		createdAt: Date.now(),
-		timeInMs: 5000,
+		timeInMs: 20000,
 	};
 	return task;
 };

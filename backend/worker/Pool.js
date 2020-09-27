@@ -107,7 +107,7 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 		if (worker !== null) {
 			const task = getTask();
 			if (task) {
-				task.status = "Running";
+				task.status = "Run";
 				redis.updateTask(task);
 				this.setWorkerBusy(worker);
 				this.mapWorkerTask(worker, task);

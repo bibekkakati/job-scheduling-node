@@ -31,7 +31,7 @@ class Redis {
 	};
 
 	updateTaskList = (taskId, createdAt) => {
-		this.redis.zadd(["tasklists", createdAt, taskId], (err, res) => {});
+		this.redis.zadd("tasklists", createdAt, taskId, (err, res) => {});
 	};
 
 	removeFromTaskList = (taskId) => {
@@ -40,11 +40,20 @@ class Redis {
 
 	getTaskList = () =>
 		new Promise((resolve, reject) => {
-			this.redis.zcard("tasklists", (number) => {
-				this.redis.zrevrange("tasklists", 0, number, (err, res) => {
-					if (err) resolve(false);
-					else resolve(res);
-				});
+			this.redis.zcard("tasklists", (err, number) => {
+				if (!err) {
+					this.redis.zrevrange(
+						"tasklists",
+						"0",
+						`${number}`,
+						(err, res) => {
+							if (err) resolve(false);
+							else resolve(res);
+						}
+					);
+				} else {
+					resolve(false);
+				}
 			});
 		});
 
@@ -71,7 +80,10 @@ class Redis {
 
 	updateTask = (task) => {
 		let { taskId } = task;
-		this.redis.hmset(taskId, task, (err, res) => {});
+		console.log(task);
+		this.redis.del(taskId, (err, res) => {
+			this.redis.hmset(taskId, task, async (err, res) => {});
+		});
 	};
 
 	getTask = (taskId) =>
@@ -88,15 +100,19 @@ class Redis {
 	getAllTask = () =>
 		new Promise(async (resolve, reject) => {
 			let taskList = await this.getTaskList();
-			if (!taskList) {
-				reject("Error: Redis fetch failed");
+			if (!taskList.length) {
+				resolve([]);
 			} else {
-				for (let i = 0; i < taskList.length; i++) {
-					this.redis.hgetall(taskList[i], (err, hash) => {
-						err ? (taskList[i] = null) : (taskList[i] = hash);
-					});
-				}
-				resolve(taskList);
+				Promise.all(
+					taskList.map(async (taskId) => {
+						let res = await this.getTask(taskId);
+						return res;
+					})
+				)
+					.then((values) => {
+						resolve(values);
+					})
+					.catch((e) => resolve([]));
 			}
 		});
 }

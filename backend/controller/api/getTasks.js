@@ -3,11 +3,12 @@ const Singleton = require("../../helper/db_helpers/Singleton");
 const redis = Singleton.getRedis();
 
 router.get("/", async (req, res) => {
-	let data = await redis.getTaskList();
-	if (data) {
+	let data = await redis.getAllTask();
+
+	if (data.length) {
 		return res.status(200).send({
 			ok: true,
-			data: res,
+			data,
 		});
 	}
 	return res.status(200).send({
