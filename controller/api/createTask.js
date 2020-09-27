@@ -1,6 +1,8 @@
 const CreateTask = require("../../helper/task_helpers/CreateTask");
 const EnqueueTask = require("../../helper/task_helpers/EnqueueTask");
 const router = require("express").Router();
+const Singleton = require("../../helper/db_helpers/Singleton");
+const redis = Singleton.getRedis();
 
 router.post("/", (req, res) => {
 	let priorityLevel;
@@ -16,12 +18,15 @@ router.post("/", (req, res) => {
 	const done = EnqueueTask(task);
 
 	if (done) {
+		task.status = "Queue";
+		redis.addTask(task);
+
 		return res.status(200).send({
 			ok: true,
-			status: "Create",
+			task,
 		});
 	}
-	return res.statusCode(401).send({
+	return res.status(401).send({
 		ok: false,
 		error: "Enqueue Failed",
 	});

@@ -3,7 +3,6 @@ const PrioritySearch = (arr, priorityLevel) => {
 		end = arr.length - 1;
 
 	if (arr[start].priorityLevel === priorityLevel) return 0;
-	if (arr[end].priorityLevel === priorityLevel) return end;
 
 	while (start <= end) {
 		let mid = Math.floor((start + end) / 2);

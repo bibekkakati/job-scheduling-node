@@ -1,9 +1,23 @@
 const router = require("express").Router();
+const AbortTask = require("../../helper/task_helpers/AbortTask");
 
-router.post("/", (req, res) => {
-	res.status(200).send({
-		ok: true,
-		status: "Abort",
+router.post("/:id", (req, res) => {
+	let taskId = req.params.id;
+	if (taskId) {
+		let res = AbortTask(taskId);
+		if (res) {
+			return res.status(200).send({
+				ok: true,
+			});
+		} else {
+			return res.status(200).send({
+				ok: false,
+			});
+		}
+	}
+	return res.status(401).send({
+		ok: false,
+		error: "Abort request failed",
 	});
 });
 
