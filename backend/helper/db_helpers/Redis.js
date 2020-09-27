@@ -50,7 +50,6 @@ class Redis {
 
 	addTask = (task) => {
 		let { taskId, createdAt } = task;
-		delete task.taskId;
 		this.redis.hmset(taskId, task, (err, res) => {
 			if (res) {
 				this.updateTaskList(taskId, createdAt);
@@ -72,7 +71,6 @@ class Redis {
 
 	updateTask = (task) => {
 		let { taskId } = task;
-		delete task.taskId;
 		this.redis.hmset(taskId, task, (err, res) => {});
 	};
 

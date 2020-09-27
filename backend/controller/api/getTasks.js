@@ -2,17 +2,16 @@ const router = require("express").Router();
 const Singleton = require("../../helper/db_helpers/Singleton");
 const redis = Singleton.getRedis();
 
-router.delete("/:id", async (req, res) => {
-	let taskId = req.params.id;
-	if (taskId) {
-		let data = await redis.deleteTask(taskId);
+router.get("/", async (req, res) => {
+	let data = await redis.getTaskList();
+	if (data) {
 		return res.status(200).send({
-			ok: data,
+			ok: true,
+			data: res,
 		});
 	}
-	return res.status(401).send({
+	return res.status(200).send({
 		ok: false,
-		error: "Deletion failed",
 	});
 });
 

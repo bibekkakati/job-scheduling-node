@@ -49,7 +49,7 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 		worker.terminate();
 		task.priorityLevel = 0;
 		task.status = "Abort";
-		redis.updateTaskStatus(task);
+		redis.updateTask(task);
 		const newWorker = new Worker(this.script, {});
 		this.pool.push({
 			status: WORKER_STATUS.IDLE,
@@ -108,7 +108,7 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 			const task = getTask();
 			if (task) {
 				task.status = "Running";
-				redis.updateTaskStatus(task);
+				redis.updateTask(task);
 				this.setWorkerBusy(worker);
 				this.mapWorkerTask(worker, task);
 				const { port1, port2 } = new MessageChannel();
