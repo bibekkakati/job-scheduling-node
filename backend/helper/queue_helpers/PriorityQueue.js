@@ -56,7 +56,7 @@ class PriorityQueue {
 
 	_fetchPriorityLevel = (data) => {
 		const priorityLevel = parseInt(data.priorityLevel);
-		return isNaN(priorityLevel) ? 0 : priorityLevel;
+		return isNaN(priorityLevel) ? 1 : priorityLevel;
 	};
 }
 

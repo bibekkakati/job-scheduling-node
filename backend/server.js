@@ -11,6 +11,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Connect db
+require("./helper/db_helpers/Singleton").getDb();
+
 // Import routes
 const taskRoutes = require("./controller/routes/task");
 

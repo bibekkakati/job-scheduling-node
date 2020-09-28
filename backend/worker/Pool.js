@@ -1,7 +1,7 @@
 const { EventEmitter } = require("events");
 const { Worker, MessageChannel } = require("worker_threads");
 const Singleton = require("../helper/db_helpers/Singleton");
-const redis = Singleton.getRedis();
+const db = Singleton.getDb();
 
 const WORKER_STATUS = {
 	IDLE: Symbol("idle"),
@@ -34,8 +34,9 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 
 	// abort task
 	abortTask(taskId) {
-		for (let i = 0; i < this.workerTaskMap; i++) {
-			if (this.workerTaskMap[i].task[taskId] === taskId) {
+		for (let i = 0; i < this.workerTaskMap.length; i++) {
+			let prevTaskId = this.workerTaskMap[i].task.taskId;
+			if (prevTaskId === taskId) {
 				return this.terminateAndReinitializeWorker(
 					this.workerTaskMap[i]
 				);
@@ -49,7 +50,7 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 		worker.terminate();
 		task.priorityLevel = 0;
 		task.status = "Abort";
-		redis.updateTask(task);
+		db.updateTask(task);
 		const newWorker = new Worker(this.script, {});
 		this.pool.push({
 			status: WORKER_STATUS.IDLE,
@@ -108,7 +109,7 @@ module.exports.WorkerPool = class WorkerPool extends EventEmitter {
 			const task = getTask();
 			if (task) {
 				task.status = "Run";
-				redis.updateTask(task);
+				db.updateTask(task);
 				this.setWorkerBusy(worker);
 				this.mapWorkerTask(worker, task);
 				const { port1, port2 } = new MessageChannel();

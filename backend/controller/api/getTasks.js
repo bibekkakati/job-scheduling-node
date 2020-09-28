@@ -1,10 +1,9 @@
 const router = require("express").Router();
 const Singleton = require("../../helper/db_helpers/Singleton");
-const redis = Singleton.getRedis();
+const db = Singleton.getDb();
 
 router.get("/", async (req, res) => {
-	let data = await redis.getAllTask();
-
+	let data = await db.getAllTask();
 	if (data.length) {
 		return res.status(200).send({
 			ok: true,

@@ -15,7 +15,17 @@ export default function TaskCards() {
 			}
 		})();
 		setLoading(false);
+		_initGetTask();
 	}, []);
+
+	const _initGetTask = () => {
+		setInterval(async () => {
+			let data = await getTasks();
+			if (data.ok) {
+				setTasks(data.data);
+			}
+		}, 5000);
+	};
 
 	const _deleteTask = async (taskId) => {
 		let res = await deleteTask(taskId);

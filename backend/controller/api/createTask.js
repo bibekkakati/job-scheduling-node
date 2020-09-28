@@ -2,9 +2,9 @@ const CreateTask = require("../../helper/task_helpers/CreateTask");
 const EnqueueTask = require("../../helper/task_helpers/EnqueueTask");
 const router = require("express").Router();
 const Singleton = require("../../helper/db_helpers/Singleton");
-const redis = Singleton.getRedis();
+const db = Singleton.getDb();
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
 	let priorityLevel;
 	try {
 		priorityLevel = parseInt(req.body.priorityLevel);
@@ -14,13 +14,11 @@ router.post("/", (req, res) => {
 	}
 
 	const task = CreateTask(priorityLevel);
-
+	task.status = "Queue";
+	await db.addTask(task);
 	const done = EnqueueTask(task);
 
 	if (done) {
-		task.status = "Queue";
-		redis.addTask(task);
-
 		return res.status(200).send({
 			ok: true,
 			task,

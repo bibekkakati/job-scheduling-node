@@ -1,15 +1,15 @@
-const Redis = require("./Redis");
+const Mongodb = require("./Database");
 
 const Singleton = (function () {
 	var instance;
 
 	function createInstance() {
-		var redis = new Redis();
-		return redis;
+		var db = new Mongodb();
+		return db;
 	}
 
 	return {
-		getRedis: function () {
+		getDb: function () {
 			if (!instance) {
 				instance = createInstance();
 			}

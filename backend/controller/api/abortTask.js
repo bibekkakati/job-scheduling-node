@@ -4,8 +4,8 @@ const AbortTask = require("../../helper/task_helpers/AbortTask");
 router.post("/:id", (req, res) => {
 	let taskId = req.params.id;
 	if (taskId) {
-		let res = AbortTask(taskId);
-		if (res) {
+		let aborted = AbortTask(taskId);
+		if (aborted) {
 			return res.status(200).send({
 				ok: true,
 			});
