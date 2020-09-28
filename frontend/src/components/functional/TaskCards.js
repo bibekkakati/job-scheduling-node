@@ -7,23 +7,23 @@ export default function TaskCards() {
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		(async () => {
-			setLoading(true);
-			let data = await getTasks();
-			if (data.ok) {
-				setTasks(data.data);
-			}
-		})();
-		setLoading(false);
+		setLoading(true);
+		_populateTasks();
 		_initGetTask();
+
+		setLoading(false);
 	}, []);
 
+	const _populateTasks = async () => {
+		let data = await getTasks();
+		if (data.ok) {
+			setTasks(data.data);
+		}
+	};
+
 	const _initGetTask = () => {
-		setInterval(async () => {
-			let data = await getTasks();
-			if (data.ok) {
-				setTasks(data.data);
-			}
+		setInterval(() => {
+			_populateTasks();
 		}, 5000);
 	};
 
@@ -31,6 +31,7 @@ export default function TaskCards() {
 		let res = await deleteTask(taskId);
 		if (res.ok) {
 			console.log("Task deleted successfully");
+			_populateTasks();
 		} else {
 			console.log("Task deletion failed");
 		}
@@ -39,6 +40,7 @@ export default function TaskCards() {
 		let res = await rescheduleTask(taskId);
 		if (res.ok) {
 			console.log("Task rescheduled successfully");
+			_populateTasks();
 		} else {
 			console.log("Reschedule request failed");
 		}
@@ -47,6 +49,7 @@ export default function TaskCards() {
 		let res = await abortTask(taskId);
 		if (res.ok) {
 			console.log("Task aborted successfully");
+			_populateTasks();
 		} else {
 			console.log("Abort request failed");
 		}
